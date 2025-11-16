@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const multer = require('multer');
+
 
 const saleManerSchema = new mongoose.Schema({
     name:{
@@ -25,19 +25,7 @@ const saleManerSchema = new mongoose.Schema({
     }
 })
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/');
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + '-' + file.originalname);
-    }
-});
 
-const upload = multer({ storage: storage }).single('profilePicture');
-
-saleManerSchema.statics.uploadProfilePicture = upload;
-saleManerSchema.statics.profilePicturePath = 'uploads/profilePicture/';
 
 const Salesman = mongoose.model('Salesman', saleManerSchema);
 
