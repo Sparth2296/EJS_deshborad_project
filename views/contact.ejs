@@ -1,0 +1,12 @@
+<%- include('partials/layout'); %>
+
+<h1>Contact Us</h1>
+
+<form action="/contact" method="POST" class="contact-form">
+  <input type="text" name="name" placeholder="Your Name" required>
+  <input type="email" name="email" placeholder="Email" required>
+  <textarea name="message" placeholder="Message" required></textarea>
+  <button type="submit" class="btn">Send Message</button>
+</form>
+  
+

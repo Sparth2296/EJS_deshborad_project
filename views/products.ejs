@@ -1,120 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
 
-    <style>
-    .product-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-        gap: 20px;
-        padding: 20px;
-    }
 
-    .product-card {
-        background: #fff;
-        border-radius: 14px;
-        overflow: hidden;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        transition: 0.3s;
-    }
+<h1>All Products</h1>
 
-    .product-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-    }
-
-    .product-card img {
-        width: 100%;
-        height: 200px;
-        object-fit: cover;
-    }
-
-    .product-body {
-        padding: 15px;
-    }
-
-    .product-title {
-        font-size: 18px;
-        font-weight: 600;
-        margin-bottom: 8px;
-    }
-
-    .product-price {
-        font-size: 20px;
-        font-weight: bold;
-        color: #111;
-        margin-bottom: 10px;
-    }
-
-    .product-desc {
-        font-size: 14px;
-        color: #555;
-        margin-bottom: 10px;
-    }
-
-    .rating {
-        color: #f5b300;
-        margin-bottom: 12px;
-        font-size: 16px;
-    }
-
-    .btn-view {
-        display: inline-block;
-        width: 100%;
-        padding: 10px;
-        background: #111;
-        color: #fff;
-        text-align: center;
-        border-radius: 8px;
-        text-decoration: none;
-        transition: 0.3s;
-    }
-
-    .btn-view:hover {
-        background: #333;
-    }
-</style>
-
-</head>
-<body>
-
-    <h1>Product List</h1>
-
-    <a href="/create">Add New Product</a>
-
-<div class="product-grid">
-
-    <% products.forEach((p) => { %>
-
-        <div class="product-card">
-            <img src="<%= p.product_image.url %>" alt="<%= p.product_name %>">
-
-            <div class="product-body">
-                <h3 class="product-title"><%= p.product_name %></h3>
-
-                <p class="product-price">₹ <%= p.price %></p>
-
-                <p class="product-desc"><%= p.sort_description %></p>
-
-                <!-- Rating Stars -->
-                <p class="rating">
-                    <% for(let i = 1; i <= p.rating; i++) { %>
-                        ⭐
-                    <% } %>
-                </p>
-
-                <!-- View Button -->
-                <a href="/product/<%= p._id %>" class="btn-view">View Details</a>
-            </div>
-        </div>
-
-    <% }) %>
-
+<div class="grid">
+  <% products.forEach(product => { %>
+    <div class="card">
+      <img src="<%= product.product_image.url %>" alt="<%= product.product_name %>">
+      <h3><%= product.product_name %></h3>
+      <p>₹<%= product.price %></p>
+      <a href="/product/<%= product._id %>" class="btn">View</a>
+    </div>
+  <% }) %>
 </div>
-    
-    
-</body>
-</html>

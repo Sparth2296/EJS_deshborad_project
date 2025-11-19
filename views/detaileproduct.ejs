@@ -1,0 +1,18 @@
+<%- include('partials/navbar'); %>
+
+  <div class="product-details">
+
+    <img class="big-img" src="<%= product.product_image.url %>" />
+    <div class="info">
+      <h1><%= product.product_name %></h1>
+
+      <p class="price">₹ <%= product.price %></p>
+
+      <p><%= product.description %></p>
+
+      <a href="/buy/<%= product._id %>" class="btn">Buy Now</a>
+    </div>
+
+  </div>
+
+

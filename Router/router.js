@@ -1,33 +1,50 @@
 const express = require("express");
-const controller = require("../controller/controller");
-const parser = require('../middlewares/upload'); // multer-storage-cloudinary
-
-
-
 const router = express.Router();
+const multer = require("../middlewares/upload");
+const controller = require("../controller/controller");
 
-router.get("/", controller.registrationController);
+// Middlewares
+function isLogged(req, res, next) {
+  if (!req.session.user) return res.redirect("/login");
+  next();
+}
 
+function isAdmin(req, res, next) {
+  if (req.session.user?.role !== "admin") return res.status(403).send("Unauthorized");
+  next();
+}
 
+function isSalesman(req, res, next) {
+  if (req.session.user?.role !== "salesman") return res.status(403).send("Unauthorized");
+  next();
+}
 
-router.post('/create', parser.single('profilePhoto'), controller.createUser);
-router.post('/:id/photo', parser.single('profilePhoto'), controller.updatePhoto);
+// Auth
+router.get("/registration", controller.registrationController);
+router.post("/registration", multer.single("profilePhoto"), controller.createUser);
 
 router.get("/login", controller.loginController);
 router.post("/login", controller.loginPostController);
 
+router.get("/logout", controller.logoutController);
 
+// User Routes
+router.get("/", isLogged, controller.userHome);
+router.get("/user", isLogged, controller.userHome);
+router.get("/about", isLogged, controller.aboutcontroller);
+router.get("/contact", isLogged, controller.contactcontroller);
 
-router.get('/userprofile/:id', controller.getUserProfile);
-router.get('/admin/:id', controller.adminController);
-router.get('/salesman/:id', controller.salesmanController);
+// Product
+router.get("/products", isLogged,controller.getProducts);
+router.get("/product/:id", isLogged, controller.getProductDetails);
 
+// Salesman
+router.get("/salesman", isSalesman, controller.salesmanController);
+router.get("/addproduct", isSalesman, controller.createProductForm);
+router.post("/addproduct", isSalesman, multer.single("product_image"), controller.createProduct);
 
-router.get('/create', controller.createProductForm);
-router.get('/products', controller.getProducts);
-router.post('/products/create', parser.single('product_image'), controller.createProduct);
-// router.get('/allproduct', controller.getProducts);
-
+// Admin
+router.get("/admin", isAdmin, controller.adminController);
 
 
 
