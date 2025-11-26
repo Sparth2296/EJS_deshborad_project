@@ -34,6 +34,7 @@ router.get("/user", isLogged, controller.userHome);
 router.get("/about", isLogged, controller.aboutcontroller);
 router.get("/contact", isLogged, controller.contactcontroller);
 
+
 // Product
 router.get("/products", isLogged,controller.getProducts);
 router.get("/product/:id", isLogged, controller.getProductDetails);
@@ -42,6 +43,9 @@ router.get("/product/:id", isLogged, controller.getProductDetails);
 router.get("/salesman", isSalesman, controller.salesmanController);
 router.get("/addproduct", isSalesman, controller.createProductForm);
 router.post("/addproduct", isSalesman, multer.single("product_image"), controller.createProduct);
+router.get("/products/edit/:id", isSalesman, controller.editProductForm);
+router.post("/products/update/:id", isSalesman, multer.single("product_image"), controller.updateProduct);
+router.post("/products/delete/:id", isSalesman, controller.deleteProduct);
 
 // Admin
 router.get("/admin", isAdmin, controller.adminController);

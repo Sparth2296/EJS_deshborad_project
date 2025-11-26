@@ -61,30 +61,29 @@
 <body>
     <div class="container">
 
-        <h2>Add New Product</h2>
+        <h2>Edit Product</h2>
 
-        <form action="/addproduct" method="POST" enctype="multipart/form-data">
+        <form action="/products/update/<%= product._id %>" method="POST" enctype="multipart/form-data">
 
             <label>Product Name</label>
-            <input type="text" name="product_name" placeholder="Enter product name" required>
+            <input type="text" name="product_name" placeholder="Enter product name" value="<%= product.product_name %>" required>
 
             <label>Price</label>
-            <input type="number" name="price" placeholder="Enter price" required>
+            <input type="number" name="price" placeholder="Enter price" value="<%= product.price %>" required>
 
             <label>Description</label>
-            <textarea name="description" rows="4" placeholder="Full product description..." required></textarea>
+            <textarea name="description" rows="4" placeholder="Full product description..." required><%= product.description %></textarea>
 
             <label>Short Description</label>
-            <textarea name="sort_description" rows="3" placeholder="Small short description..." required></textarea>
+            <textarea name="sort_description" rows="3" placeholder="Small short description..." required><%= product.sort_description %></textarea>
 
             <label>Discount (%)</label>
-            <input type="number" name="discount" placeholder="0">
-
+            <input type="number" name="discount" placeholder="0" value="<%= product.discount %>">
             <label>Product Image</label>
             <input type="file" name="product_image" accept="image/*" required>
 
             <label>Colors (comma separated)</label>
-            <input type="text" name="color" placeholder="red, blue, black">
+            <input type="text" name="color" placeholder="red, blue, black" value="<%= product.color %>">
 
             <label>Rating</label>
             <select name="rating">
@@ -95,7 +94,7 @@
                 <option value="1">⭐</option>
             </select>
 
-            <button type="submit">Add Product</button>
+            <button type="submit">Update Product</button>
         </form>
 
     </div>

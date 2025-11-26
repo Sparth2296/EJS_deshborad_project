@@ -24,11 +24,12 @@ app.use(
   session({
     secret: "supersecret",
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: true,
+     cookie: {
+            maxAge: 60 * 60 * 1000 // Session expires after 1 hour (in milliseconds)
+        }
   })
 );
-
-
 
 // Make session user available in all EJS files
 app.use((req, res, next) => {

@@ -93,6 +93,7 @@ module.exports.contactcontroller = (req, res) => {
 
 
 
+
 // Admin Dashboard
 module.exports.adminController = async (req, res) => {
   const products = await Product.find();
@@ -102,14 +103,16 @@ module.exports.adminController = async (req, res) => {
 
 // Salesman Dashboard
 module.exports.salesmanController = async (req, res) => {
+  const salesman = await User.findOne({ _id: req.session.user._id });
   const products = await Product.find();
-  res.render("salesman", { user: req.session.user, products });
+  res.render("salesman", { user: req.session.user, salesman, products });
 };
 
 // Add Product (Form)
 module.exports.createProductForm = (req, res) => {
   res.render("addproduct");
 };
+
 
 // Create Product (Submit)
 module.exports.createProduct = async (req, res) => {
@@ -136,6 +139,50 @@ module.exports.createProduct = async (req, res) => {
     res.status(500).send("Product creation failed");
   }
 };
+
+module.exports.editProductForm = async (req, res) => {
+  const id = req.params.id;
+  const product = await Product.findById(id);
+  res.render("editproduct", { user: req.session.user, product });
+};
+
+module.exports.updateProduct = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { product_name, price, description, sort_description, discount, color, rating } = req.body;
+
+    await Product.findByIdAndUpdate(id, {
+      product_name,
+      price,
+      description,
+      sort_description,
+      discount,
+      color,
+      rating,
+      product_image: {
+        url: req.file.path,
+        public_id: req.file.filename,
+      }
+    });
+
+    res.redirect("/products");
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Product update failed");
+  }
+};
+
+module.exports.deleteProduct = async (req, res) => {
+  try {
+    const id = req.params.id;
+    await Product.findByIdAndDelete(id);
+    res.redirect("/products");
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Product deletion failed");
+  }
+};
+
 
 // Show all products
 module.exports.getProducts = async (req, res) => {
