@@ -1,19 +1,212 @@
 
 
-<h1>Welcome to MyStore</h1>
+<!-- <h1>Welcome to MyStore</h1>
 <p>Your favorite shop to explore premium products!</p>
 
 <section class="hero">
   <h2>Featured Products</h2>
 
   <div class="grid">
-    <% products.forEach(product => { %>
+    <% products.forEach((product) => { %>
       <div class="card">
-        <img src="<%= product.image %>" alt="<%= product.name %>">
-        <h3><%= product.name %></h3>
+        <img src="<%= product.product_image.url %>" alt="<%= product.product_name %>">
+        <h3><%= product.product_name %></h3>
         <p>₹<%= product.price %></p>
-        <a href="/products/<%= product._id %>" class="btn">View</a>
+        <a href="/product/<%= product._id %>" class="btn">View</a>
       </div>
     <% }) %>
   </div>
-</section>
+</section> -->
+
+
+<!-- Hero Slider -->
+  <section class="relative bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 lg:py-20">
+      <div id="heroSlider" class="relative overflow-hidden">
+        <div class="slide-enter">
+          <div class="flex flex-col md:flex-row items-center justify-between gap-6 lg:gap-12">
+            <div class="md:w-1/2 space-y-4 sm:space-y-6 text-center md:text-left">
+              <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold">Welcome to MyShop</h2>
+              <p class="text-base sm:text-lg lg:text-xl">Discover premium products at unbeatable prices</p>
+              <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center md:justify-start">
+                <a href="/products" class="bg-white text-indigo-600 px-6 sm:px-8 py-2.5 sm:py-3 rounded-full font-semibold hover:bg-gray-100 transition text-sm sm:text-base">Shop Now</a>
+                <a href="/deals" class="border-2 border-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-full font-semibold hover:bg-white hover:text-indigo-600 transition text-sm sm:text-base">View Deals</a>
+              </div>
+            </div>
+            <div class="md:w-1/2 w-full mt-6 md:mt-0">
+              <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=600" alt="Shopping" class="rounded-lg shadow-2xl w-full max-w-md mx-auto md:max-w-full">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories -->
+  <section class="py-12 sm:py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-8 sm:mb-12">
+        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">Shop by Category</h2>
+        <p class="text-sm sm:text-base text-gray-600 mt-2">Browse our wide range of product categories</p>
+      </div>
+      
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 lg:gap-6">
+        <% 
+        const categories = [
+          {name: 'Electronics', icon: 'fa-laptop', color: 'bg-blue-100 text-blue-600'},
+          {name: 'Fashion', icon: 'fa-shirt', color: 'bg-pink-100 text-pink-600'},
+          {name: 'Home', icon: 'fa-house', color: 'bg-green-100 text-green-600'},
+          {name: 'Beauty', icon: 'fa-spray-can', color: 'bg-purple-100 text-purple-600'},
+          {name: 'Sports', icon: 'fa-football', color: 'bg-orange-100 text-orange-600'},
+          {name: 'Books', icon: 'fa-book', color: 'bg-yellow-100 text-yellow-600'}
+        ];
+        categories.forEach((cat) => { %>
+          <a href="/category/<%= cat.name.toLowerCase() %>" class="group">
+            <div class="<%= cat.color %> rounded-lg p-4 sm:p-6 lg:p-8 text-center hover:shadow-lg transition transform hover:-translate-y-1">
+              <i class="fas <%= cat.icon %> text-2xl sm:text-3xl lg:text-4xl mb-2 sm:mb-3"></i>
+              <p class="font-semibold text-xs sm:text-sm lg:text-base"><%= cat.name %></p>
+            </div>
+          </a>
+        <% }) %>
+      </div>
+    </div>
+  </section>
+
+  <!-- Flash Sale Slider -->
+  <section class="py-12 sm:py-16 bg-gradient-to-r from-red-500 to-pink-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col sm:flex-row justify-between items-center mb-6 sm:mb-8 gap-4">
+        <div class="text-center sm:text-left">
+          <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">⚡ Flash Sale</h2>
+          <p class="text-white text-sm sm:text-base lg:text-lg mt-1">Hurry! Limited time offers</p>
+        </div>
+        <div class="text-white text-center sm:text-right">
+          <p class="text-xs sm:text-sm">Ends in</p>
+          <p class="text-xl sm:text-2xl lg:text-3xl font-bold">05:23:45</p>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <% 
+        // Flash sale products (assuming you pass this data)
+        const flashProducts = products.slice(0, 4);
+        flashProducts.forEach((product) => { %>
+          <div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition transform hover:-translate-y-2">
+            <div class="relative">
+              <img src="<%= product.product_image.url %>" alt="<%= product.product_name %>" class="w-full h-40 sm:h-48 object-cover">
+              <span class="absolute top-2 right-2 bg-red-500 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-bold">-40%</span>
+            </div>
+            <div class="p-3 sm:p-4">
+              <h3 class="font-semibold text-sm sm:text-base text-gray-900 mb-2 truncate"><%= product.product_name %></h3>
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-lg sm:text-xl lg:text-2xl font-bold text-indigo-600">₹<%= Math.floor(product.price * 0.6) %></p>
+                  <p class="text-xs sm:text-sm text-gray-500 line-through">₹<%= product.price %></p>
+                </div>
+                <a href="/product/<%= product._id %>" class="bg-indigo-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-indigo-700 transition text-sm">
+                  <i class="fas fa-shopping-cart"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Products -->
+  <section class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl font-bold text-gray-900">Featured Products</h2>
+        <p class="text-gray-600 mt-2">Handpicked just for you</p>
+      </div>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <% products.forEach((product) => { %>
+          <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+            <div class="relative group">
+              <img src="<%= product.product_image.url %>" alt="<%= product.product_name %>" class="w-full h-64 object-cover group-hover:scale-105 transition duration-300">
+              <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition flex items-center justify-center opacity-0 group-hover:opacity-100">
+                <a href="/product/<%= product._id %>" class="bg-white text-indigo-600 px-6 py-2 rounded-full font-semibold">Quick View</a>
+              </div>
+            </div>
+            <div class="p-5">
+              <h3 class="font-semibold text-lg text-gray-900 mb-2 truncate"><%= product.product_name %></h3>
+              <div class="flex items-center mb-3">
+                <div class="flex text-yellow-400">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star-half-alt"></i>
+                </div>
+                <span class="text-gray-600 text-sm ml-2">(4.5)</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <p class="text-2xl font-bold text-indigo-600">₹<%= product.price %></p>
+                <a href="/product/<%= product._id %>" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">
+                  View
+                </a>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Choose Us -->
+  <section class="py-12 sm:py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-8 sm:mb-12">
+        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">Why Choose MyShop?</h2>
+      </div>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+        <div class="text-center">
+          <div class="bg-indigo-100 w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+            <i class="fas fa-shipping-fast text-2xl sm:text-3xl text-indigo-600"></i>
+          </div>
+          <h3 class="font-semibold text-lg sm:text-xl mb-2">Free Shipping</h3>
+          <p class="text-sm sm:text-base text-gray-600">On orders over ₹500</p>
+        </div>
+        <div class="text-center">
+          <div class="bg-green-100 w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+            <i class="fas fa-undo text-2xl sm:text-3xl text-green-600"></i>
+          </div>
+          <h3 class="font-semibold text-lg sm:text-xl mb-2">Easy Returns</h3>
+          <p class="text-sm sm:text-base text-gray-600">30-day return policy</p>
+        </div>
+        <div class="text-center">
+          <div class="bg-purple-100 w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+            <i class="fas fa-shield-alt text-2xl sm:text-3xl text-purple-600"></i>
+          </div>
+          <h3 class="font-semibold text-lg sm:text-xl mb-2">Secure Payment</h3>
+          <p class="text-sm sm:text-base text-gray-600">100% secure transactions</p>
+        </div>
+        <div class="text-center">
+          <div class="bg-yellow-100 w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+            <i class="fas fa-headset text-2xl sm:text-3xl text-yellow-600"></i>
+          </div>
+          <h3 class="font-semibold text-lg sm:text-xl mb-2">24/7 Support</h3>
+          <p class="text-sm sm:text-base text-gray-600">Dedicated customer service</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter -->
+  <section class="py-12 sm:py-16 bg-gradient-to-r from-indigo-600 to-purple-600">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center text-white">
+        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4">Subscribe to Our Newsletter</h2>
+        <p class="text-base sm:text-lg lg:text-xl mb-6 sm:mb-8">Get the latest updates on new products and exclusive offers!</p>
+        <form class="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 max-w-2xl mx-auto">
+          <input type="email" placeholder="Enter your email" class="flex-1 px-4 sm:px-6 py-2.5 sm:py-3 rounded-full text-gray-900 focus:outline-none focus:ring-2 focus:ring-white text-sm sm:text-base">
+          <button type="submit" class="bg-white text-indigo-600 px-6 sm:px-8 py-2.5 sm:py-3 rounded-full font-semibold hover:bg-gray-100 transition text-sm sm:text-base whitespace-nowrap">Subscribe</button>
+        </form>
+      </div>
+    </div>
+  </section>
+

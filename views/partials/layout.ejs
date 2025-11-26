@@ -1,20 +1,469 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Product Dashboard</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MyShop - Your Premium Shopping Destination">
+  <title>Product Dashboard | MyShop</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Custom Styles -->
   <link rel="stylesheet" href="/css/style.css">
+  
+  <style>
+    /* Custom Animations */
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(100%); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .slide-enter { animation: slideIn 0.5s ease-out; }
+    .fade-in { animation: fadeIn 0.6s ease-out; }
+    .slide-down { animation: slideDown 0.3s ease-out; }
+    
+    /* Smooth Scrolling */
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 5px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+    
+    /* Loading Animation */
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Mobile Menu Overlay */
+    .mobile-menu-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 40;
+      display: none;
+    }
+    
+    .mobile-menu-overlay.active {
+      display: block;
+    }
+    
+    /* Prevent body scroll when mobile menu is open */
+    body.menu-open {
+      overflow: hidden;
+    }
+    
+    /* Responsive Container */
+    .container-custom {
+      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    
+    @media (min-width: 640px) {
+      .container-custom {
+        max-width: 640px;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+      }
+    }
+    
+    @media (min-width: 768px) {
+      .container-custom {
+        max-width: 768px;
+      }
+    }
+    
+    @media (min-width: 1024px) {
+      .container-custom {
+        max-width: 1024px;
+        padding-left: 2rem;
+        padding-right: 2rem;
+      }
+    }
+    
+    @media (min-width: 1280px) {
+      .container-custom {
+        max-width: 1280px;
+      }
+    }
+    
+    @media (min-width: 1536px) {
+      .container-custom {
+        max-width: 1536px;
+      }
+    }
+  </style>
 </head>
-<body>
+<body class="bg-gray-50 antialiased">
 
+  <!-- Navbar Include -->
   <%- include('navbar'); %>
   
-  <main class="container">
-    <%- body %>
+  <!-- Main Content Area -->
+  <main class="min-h-screen">
+    <!-- Page Content Container -->
+    <div class="container-custom mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10">
+      <!-- Breadcrumb Navigation (Optional) -->
+      <nav class="mb-4 sm:mb-6 lg:mb-8 fade-in" aria-label="Breadcrumb">
+        <ol class="flex items-center space-x-2 text-sm text-gray-600">
+          <li>
+            <a href="/" class="hover:text-indigo-600 transition">
+              <i class="fas fa-home"></i>
+              <span class="ml-1 hidden sm:inline">Home</span>
+            </a>
+          </li>
+          <li><i class="fas fa-chevron-right text-xs"></i></li>
+          <li class="text-gray-900 font-medium">Dashboard</li>
+        </ol>
+      </nav>
+      
+      <!-- Main Body Content -->
+      <div class="fade-in">
+        <%- body %>
+      </div>
+    </div>
   </main>
 
-  <footer class="footer">
-    <p>© 2025 MyStore</p>
-  </footer>
+  <!-- Footer Include -->
+  <%- include('footer'); %>
+  
+  <!-- Back to Top Button -->
+  <button id="backToTop" class="fixed bottom-6 right-6 bg-indigo-600 text-white w-12 h-12 rounded-full shadow-lg hover:bg-indigo-700 transition-all duration-300 opacity-0 invisible z-50 flex items-center justify-center">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+  
+  <!-- Mobile Menu Overlay -->
+  <div id="mobileMenuOverlay" class="mobile-menu-overlay"></div>
 
+  <!-- Scripts -->
+  <script>
+    // ============================================
+    // Mobile Menu Toggle with Overlay
+    // ============================================
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+    const body = document.body;
+    
+    if (mobileMenuBtn) {
+      mobileMenuBtn.addEventListener('click', () => {
+        const isOpen = !mobileMenu.classList.contains('hidden');
+        
+        if (isOpen) {
+          // Close menu
+          mobileMenu.classList.add('hidden');
+          mobileMenuOverlay.classList.remove('active');
+          body.classList.remove('menu-open');
+        } else {
+          // Open menu
+          mobileMenu.classList.remove('hidden');
+          mobileMenu.classList.add('slide-down');
+          mobileMenuOverlay.classList.add('active');
+          body.classList.add('menu-open');
+        }
+      });
+      
+      // Close menu when clicking overlay
+      mobileMenuOverlay.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+        mobileMenuOverlay.classList.remove('active');
+        body.classList.remove('menu-open');
+      });
+    }
+    
+    // ============================================
+    // Hero Slider Functionality
+    // ============================================
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('#heroSlider > div');
+    
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        if (i === index) {
+          slide.classList.remove('hidden');
+          slide.classList.add('slide-enter');
+        } else {
+          slide.classList.add('hidden');
+        }
+      });
+    }
+    
+    function nextSlide() {
+      if (slides.length > 1) {
+        currentSlide = (currentSlide + 1) % slides.length;
+        showSlide(currentSlide);
+      }
+    }
+    
+    function prevSlide() {
+      if (slides.length > 1) {
+        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+        showSlide(currentSlide);
+      }
+    }
+    
+    // Auto-slide every 5 seconds
+    if (slides.length > 0) {
+      setInterval(nextSlide, 5000);
+      
+      // Initialize first slide
+      showSlide(0);
+    }
+    
+    // ============================================
+    // Flash Sale Countdown Timer
+    // ============================================
+    function updateCountdown() {
+      const countdownElement = document.getElementById('countdown');
+      if (!countdownElement) return;
+      
+      // Set end time (24 hours from now for demo)
+      const endTime = new Date().getTime() + (24 * 60 * 60 * 1000);
+      
+      setInterval(() => {
+        const now = new Date().getTime();
+        const distance = endTime - now;
+        
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        
+        countdownElement.innerHTML = 
+          String(hours).padStart(2, '0') + ':' + 
+          String(minutes).padStart(2, '0') + ':' + 
+          String(seconds).padStart(2, '0');
+        
+        if (distance < 0) {
+          countdownElement.innerHTML = "EXPIRED";
+        }
+      }, 1000);
+    }
+    
+    updateCountdown();
+    
+    // ============================================
+    // Back to Top Button
+    // ============================================
+    const backToTopBtn = document.getElementById('backToTop');
+    
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        backToTopBtn.classList.remove('opacity-0', 'invisible');
+        backToTopBtn.classList.add('opacity-100', 'visible');
+      } else {
+        backToTopBtn.classList.remove('opacity-100', 'visible');
+        backToTopBtn.classList.add('opacity-0', 'invisible');
+      }
+    });
+    
+    backToTopBtn.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+    
+    // ============================================
+    // Lazy Loading Images
+    // ============================================
+    if ('IntersectionObserver' in window) {
+      const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const img = entry.target;
+            if (img.dataset.src) {
+              img.src = img.dataset.src;
+              img.classList.add('fade-in');
+              observer.unobserve(img);
+            }
+          }
+        });
+      });
+      
+      document.querySelectorAll('img[data-src]').forEach(img => {
+        imageObserver.observe(img);
+      });
+    }
+    
+    // ============================================
+    // Search Functionality (if search input exists)
+    // ============================================
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    
+    if (searchBtn && searchInput) {
+      searchBtn.addEventListener('click', () => {
+        const query = searchInput.value.trim();
+        if (query) {
+          window.location.href = `/search?q=${encodeURIComponent(query)}`;
+        }
+      });
+      
+      searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          const query = searchInput.value.trim();
+          if (query) {
+            window.location.href = `/search?q=${encodeURIComponent(query)}`;
+          }
+        }
+      });
+    }
+    
+    // ============================================
+    // Add to Cart Animation
+    // ============================================
+    document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Add loading state
+        const originalText = this.innerHTML;
+        this.innerHTML = '<span class="loading"></span>';
+        this.disabled = true;
+        
+        // Simulate API call
+        setTimeout(() => {
+          this.innerHTML = '<i class="fas fa-check"></i> Added!';
+          this.classList.remove('bg-indigo-600');
+          this.classList.add('bg-green-600');
+          
+          // Reset after 2 seconds
+          setTimeout(() => {
+            this.innerHTML = originalText;
+            this.classList.remove('bg-green-600');
+            this.classList.add('bg-indigo-600');
+            this.disabled = false;
+          }, 2000);
+        }, 1000);
+      });
+    });
+    
+    // ============================================
+    // Responsive Table Wrapper
+    // ============================================
+    document.querySelectorAll('table').forEach(table => {
+      if (!table.parentElement.classList.contains('overflow-x-auto')) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'overflow-x-auto rounded-lg shadow';
+        table.parentNode.insertBefore(wrapper, table);
+        wrapper.appendChild(table);
+      }
+    });
+    
+    // ============================================
+    // Touch Swipe for Mobile Slider
+    // ============================================
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    const slider = document.getElementById('heroSlider');
+    if (slider) {
+      slider.addEventListener('touchstart', e => {
+        touchStartX = e.changedTouches[0].screenX;
+      });
+      
+      slider.addEventListener('touchend', e => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+      });
+      
+      function handleSwipe() {
+        if (touchEndX < touchStartX - 50) {
+          nextSlide();
+        }
+        if (touchEndX > touchStartX + 50) {
+          prevSlide();
+        }
+      }
+    }
+    
+    // ============================================
+    // Smooth Fade-in on Scroll
+    // ============================================
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('fade-in');
+        }
+      });
+    }, observerOptions);
+    
+    document.querySelectorAll('.card, .product-card, section').forEach(el => {
+      observer.observe(el);
+    });
+    
+    // ============================================
+    // Print Console Info
+    // ============================================
+    console.log('%c🚀 MyShop Dashboard Loaded Successfully!', 'color: #4F46E5; font-size: 16px; font-weight: bold;');
+    console.log('%c📱 Responsive Layout Active', 'color: #10B981; font-size: 14px;');
+
+     // For products page
+app.get('/products', async (req, res) => {
+    const products = await Product.find();
+    res.render('products', { products });
+});
+
+// For product details
+app.get('/products/:id', async (req, res) => {
+    const product = await Product.findById(req.params.id);
+    res.render('productDetails', { product });
+});
+
+  </script>
+  
+  <!-- Custom Page Scripts -->
+  <%- typeof scripts !== 'undefined' ? scripts : '' %>
+
+
+ 
+  
 </body>
 </html>

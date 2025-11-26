@@ -30,10 +30,13 @@ exports.createUser = async (req, res) => {
 
     req.session.user = user; // save session
     res.redirect('/');
+
   } catch (err) {
+
     console.error(err);
     res.status(500).send('Error creating user');
   }
+
 };
 
 // Login Page
@@ -73,8 +76,9 @@ module.exports.logoutController = (req, res) => {
 };
 
 // User Home
-module.exports.userHome = (req, res) => {
-  res.render('home', { user: req.session.user });
+module.exports.userHome = async (req, res) => {
+  const products = await Product.find();
+  res.render('home', { user: req.session.user , products});
 };
 
 // About Page
@@ -141,6 +145,12 @@ module.exports.getProducts = async (req, res) => {
 
 // Product Details
 module.exports.getProductDetails = async (req, res) => {
-  const product = await Product.findById(req.params.id);
+
+
+  const id = req.params.id;
+
+  const product = await Product.findById(id);
+
   res.render("detaileproduct", { user: req.session.user, product });
+
 };
